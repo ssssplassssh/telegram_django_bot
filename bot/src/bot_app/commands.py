@@ -1,13 +1,13 @@
-# Для hint-ів(підсказок)
+# For hints
 from aiogram import types
 
 from bot_app import messages
 
 from . import dp
 
-# обробник хендлерів, список команд, на які він буде реагувати
+# handler , the list of commands it will respond to
 @dp.message_handler(commands=['start', 'help'])
-# на вхід поступить повідомлення типу Message
+# a Message type message will be sent to the input
 async def send_welcome(message: types.Message):
-    # очікуємо, reply - відповідь
+    # we are waiting, reply - an answer
     await message.reply(messages.WELCOME_MESSAGE)

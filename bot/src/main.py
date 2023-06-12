@@ -2,6 +2,6 @@ from aiogram import executor
 from bot_app import dp
 
 
-if __name__ == '__main__': # Ця конструкція перевіряє, чи файл був запущений безпосередньо, а не імпортований як модуль. Це потрібно, щоб код всередині цієї умови виконувався тільки при безпосередньому запуску файлу.
-    # розпочинає отримання повідомлень від користувачів за допомогою методу start_polling об'єкта executor. Передається об'єкт, який відповідає за обробку повідомлень, і вказується що бот повинен пропустити всі необроблені повідомлення, які надійшли до нього до цього моменту
+if __name__ == '__main__': # This construct checks whether the file was run directly and not imported as a module. This is required so that the code inside this condition is only executed when the file is run directly.
+     # starts receiving messages from users using the start_polling method of the executor object. The object responsible for message processing is passed, and it is indicated that the bot should skip all unprocessed messages that have arrived to it so far
     executor.start_polling(dp, skip_updates=True)

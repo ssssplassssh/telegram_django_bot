@@ -1,20 +1,20 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from . data_fetcher import get_random, get_next
+from . data_fetcher import get_next
 from bot_app.states import GameStates
 from . keyboards import inline_kb
 from . import dp
 from .app import bot
-# Вказуємо хендлерові що він працює з об'єктом стану, state, * - що він працює в будь-якому стані, і закидаємо це в нашу функцію
+# We tell the handler that it works with the state object, state, * - that it works in any state, and throw it into our function
 @dp.message_handler(commands='train_all', state="*")
 # FSMContext - 
 async def train_all(message: types.Message, state: FSMContext):
     
-    # В цьому рядку бот запам'ятовує, що ми знаходимося в стані random_ten_set
+    # In this line, the bot remembers that we are in the random_ten_set state
     await GameStates.all_words.set()
     
-    # результат звернення до нашого бекенду
-    # те що ми дочекаємося виконання усіх асинхронних функцій(корутини) і отримаємо рандомне слово
+    # the result of calling our backend
+    # the fact that we will wait for the execution of all asynchronous functions (coroutines) and receive a random word
     res = await get_next(0)
     # Передаємо дані з бекенда в стан, щоб наш бот запам'ятав в якому стані ми знаходимося
     if not res:
@@ -26,11 +26,11 @@ async def train_all(message: types.Message, state: FSMContext):
         data['pk'] = 1
         data['answer'] = res.get('gender')
         data['word'] = res.get('word')
-        # reply_markup - відповідь клавіатурою
+        # reply_markup - answer by keyboard
         await message.reply(f"{data['step']}. Das wort ist {data['word']}", reply_markup=inline_kb)
         
-# Обробка відповіді зі сторони клієнта(обробка колбека)
-# Якщо у відповідь прилетіло щось з даного списку, то тільки тоді виконується дана асинхронна функція
+# Processing of the response from the client side (processing of the callback)
+# If something from this list arrived in response, then only then this asynchronous function is executed
 @dp.callback_query_handler(lambda c: c.data in ['das', 'die', 'der'], state=GameStates.all_words)
 async def button_click_call_back_all(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)

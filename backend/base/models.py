@@ -10,7 +10,7 @@ class Word(models.Model):
         ('das', 'Das')
     }
     
-    # Поле обов'язкове
+    # Field is required
     word = models.CharField(verbose_name='Word', max_length=100)
 
     gender = models.CharField(verbose_name='Gender', max_length=3, choices=GENDERS)

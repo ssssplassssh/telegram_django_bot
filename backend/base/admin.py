@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from . import models
 
-# 1 Варіант реєстрації(обидва еквівалентні, але 2 ліпше)
+# 1 Registration option (both are equivalent, but 2 is better)
 
 class WordAdmin(admin.ModelAdmin):
 
@@ -14,8 +14,7 @@ class WordAdmin(admin.ModelAdmin):
 admin.site.register(models.Word, WordAdmin)
 
 
-# 2 Варіант реєстрації
-
+# 2 Registration option
 # @admin.register(models.Word)
 # class WordAdmin(admin.ModelAdmin):
     

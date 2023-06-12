@@ -19,10 +19,10 @@ from base import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # as_view() - означає що ми звертаємося до нього як до звичайного BestView
-    # видача рандомного слова 
+    # as_view() - means that we refer to it as a normal BestView
+    # issuing a random word
     path('random/', views.RandomWord.as_view()),
-    path('next/<int:pk>', views.NextWord.as_view()), # <int:pk> - id поточного слова
-    # Запити надсилаються з 0 по 3, якщо буде більше 4 - HttpResponseNotFound(...next/0)
+    path('next/<int:pk>', views.NextWord.as_view()), # <int:pk> - id current word
+    # Requests are sent from 0 to 3, if more than 4 - HttpResponseNotFound(...next/0)
 ]
 

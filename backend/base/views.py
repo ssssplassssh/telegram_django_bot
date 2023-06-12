@@ -1,52 +1,49 @@
 import random
-from django.shortcuts import render
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import HttpResponseNotFound
 
-
 from base import models
-
 
 # Create your views here.
 
 class WordSerializator(serializers.ModelSerializer):
     
-    # вказуємо об'кти якої моделі ми збираємося серіалізувати
+    # specify the objects of which model we are going to serialize
     class Meta:
         model = models.Word
-        # pk - це id
+        # pk - it's id
         fields = ['pk', 'gender', 'word']
         
-# Створюємо в'ю, яке буде приймати запит користувача і віддавати випадкове слово(серіалізоване), придатне до передачі по протоколу REST API
+# We create a view that will accept a user request and return a random word (serialized) suitable for passing through the REST API protocol
 
 class RandomWord(APIView):
-    # get - метод для звертання(отримання)
+    # get - method for calling (getting)
     def get(self, *args, **kwargs):
-        # отримуємо усі слова
+        # we get all the words
         all_words = models.Word.objects.all()
-        # Вибираємо рандомно слово
+        # We choose a random word
         ranfom_word = random.choice(all_words)
-        # Серіалізуємо його і робимо його об'єктом
+        # We serialize it and make it an object
         serialized_random_word = WordSerializator(ranfom_word, many=False)
-        # many=False - вказує що це один об'єкт, а не список 
-        # Повертаємо це у вигляді відповіді цей серіалізований об'єкт, що був рандомно вибраний 
+        # many=False - indicates that this is a single object, not a list
+        # We return this serialized object that was randomly selected as an answer
         return Response(serialized_random_word.data)
   
   
-# Клас, який буде віддавати наступне слово, щоб була можливість пройти усі слова в БД одне за одним
+# A class that will return the next word so that it is possible to go through all the words in the database one by one
 class NextWord(APIView):
-    # pk - потрібне як id попереднього слова, щоб видати наступне
-    # format=None з документації
+    # pk - is needed as the id of the previous word to output the next one
+    # format=None from the documentation
     def get(self, request, pk, format=None):
-        # вибираємо наступне слово від поточного слова(по pk)
-        # бере всі слово у яких pk більше ніж те що нам надіслали
-        # first() - зі всіх наступних слів беремо перше
+        # choose the next word from the current word (by pk)
+        # takes all the words of those whose pk is more than what was sent to us
+        # first() - we take the first of all the following words
         word = models.Word.objects.filter(pk__gt=pk).first()
-        # якщо нічого не надіслалося
+        # if nothing was sent
         if not word:
             return HttpResponseNotFound()
-        # якщо об'єкт існує, то серіалізуємо його і відповідаємо
+        # if the object exists, then we serialize it and respond
         ser_word = WordSerializator(word, many=False)
         return Response(ser_word.data)
